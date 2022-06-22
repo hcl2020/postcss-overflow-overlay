@@ -1,31 +1,34 @@
 /**
  * @type {import('postcss').PluginCreator}
  */
-module.exports = (opts = {}) => {
-  // Work with options here
+module.exports = () => {
+  let skipped = Symbol('isSkipped'); // skipped flag
+  let counter = Symbol('skippedCounter'); // counter for test "isSkipped" optimization
+
+  function makeRuleOverflowOverlay(decl) {
+    let rule = decl.parent;
+    rule[counter] = Number.isInteger(rule[counter]) ? rule[counter] : 0;
+    if (!rule[skipped]) {
+      if (decl.value === 'auto') {
+        let hasOverlay = rule.some(i => i.value === 'overlay');
+        if (!hasOverlay) {
+          rule.append({ prop: decl.prop, value: 'overlay' });
+        }
+        rule[skipped] = true;
+        rule[counter]++;
+      }
+    }
+    // console.log(rule[counter]);
+  }
 
   return {
     postcssPlugin: 'postcss-overflow-overlay',
-    /*
-    Root (root, postcss) {
-      // Transform CSS AST here
-    }
-    */
-
-    /*
-    Declaration (decl, postcss) {
-      // The faster way to find Declaration node
-    }
-    */
-
-    /*
     Declaration: {
-      color: (decl, postcss) {
-        // The fastest way find Declaration node if you know property name
-      }
+      overflow: decl => makeRuleOverflowOverlay(decl),
+      'overflow-x': decl => makeRuleOverflowOverlay(decl),
+      'overflow-y': decl => makeRuleOverflowOverlay(decl)
     }
-    */
-  }
-}
+  };
+};
 
-module.exports.postcss = true
+module.exports.postcss = true;

@@ -1,6 +1,6 @@
 {
   "name": "postcss-overflow-overlay",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "PostCSS plugin for adding 'overflow: overlay' style for elements with 'overflow: auto'",
   "keywords": [
     "postcss",
@@ -13,7 +13,8 @@
     "chrome"
   ],
   "scripts": {
-    "test": "jest --coverage && eslint ."
+    "test": "jest --coverage && eslint .",
+    "test:watch": "jest --coverage --watch"
   },
   "author": "hcl2020 <907953320@qq.com>",
   "license": "MIT",
